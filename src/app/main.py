@@ -1,0 +1,57 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import streamlit as st
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from embedding.embedder import SentenceTransformerEmbeddings
+from embedding.index_faiss import build_qdrant_index_with_sentence_transformer
+from parsing.extract_text import extract_text
+from retrieval.retriever import retrieve
+from llm.gemini import call_gemini
+
+
+PDF_PATH = "./data/pdf/ifc-annual-report-2024-financials.pdf"
+QDRANT_COLLECTION = "ifc_report"
+
+
+@st.cache_resource
+def load_and_index_documents():
+    documents = extract_text(PDF_PATH)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+    chunks = text_splitter.split_documents(documents)
+
+    embedding_model = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
+
+    vectorstore = build_qdrant_index_with_sentence_transformer(
+        chunks,
+        embedding_model,
+        collection_name=QDRANT_COLLECTION
+    )
+    return vectorstore
+
+
+# === Streamlit App ===
+def main():
+    st.title("IFC Annual Report RAG System")
+    user_query = st.text_input("Ask a question about the report")
+
+    with st.spinner("Loading..."):
+        vectorstore = load_and_index_documents()
+
+    if user_query:
+        with st.spinner("Processing query..."):
+            relevant_chunks = retrieve(user_query, vectorstore)
+            context = "\n\n".join([chunk.page_content for chunk in relevant_chunks])
+            prompt = f"Answer the question using the following context:\n{context}\n\nQuestion: {user_query}"
+            answer = call_gemini(prompt)
+
+            st.markdown("### Answer:")
+            st.write(answer)
+
+            st.markdown("### Retrieved Context:")
+            for chunk in relevant_chunks:
+                st.markdown(f"> {chunk.page_content}")
+
+
+if __name__ == "__main__":
+    main()

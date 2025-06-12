@@ -1,0 +1,56 @@
+from langchain.embeddings.base import Embeddings
+from sentence_transformers import SentenceTransformer
+import json
+import os
+from google.genai import types
+
+class GeminiEmbeddings(Embeddings):
+    def __init__(self, client, model: str = "text-embedding-004"):
+        self.client = client
+        self.model = model
+
+    def embed_documents(self, texts: list[str]) -> list[list[float]]:
+        batch_size = 16
+        embeddings = []
+        for i in range(0, len(texts), batch_size):
+            batch = texts[i:i+batch_size]
+            responses = [
+                self.client.models.embed_content(
+                    model=self.model,
+                    contents={"parts": [{"text": text}]},
+                    config=types.EmbedContentConfig(task_type="RETRIEVAL_DOCUMENT")
+                )
+                for text in batch
+            ]
+            embeddings.extend([r.embeddings[0].values for r in responses])
+        return embeddings
+
+    def embed_query(self, text: str) -> list[float]:
+        response = self.client.models.embed_content(
+            model=self.model,
+            contents={"parts": [{"text": text}]},
+            config=types.EmbedContentConfig(task_type="RETRIEVAL_QUERY")
+        )
+        return response.embeddings[0].values
+
+
+class SentenceTransformerEmbeddings(Embeddings):
+    def __init__(self, model_name="all-MiniLM-L6-v2"):
+        self.model = SentenceTransformer(model_name)
+
+    def embed_documents(self, texts: list[str]) -> list[list[float]]:
+        return self.model.encode(texts, convert_to_numpy=True).tolist()
+
+    def embed_query(self, text: str) -> list[float]:
+        return self.model.encode(text, convert_to_numpy=True).tolist()
+
+
+def save_embeddings_cache(file_path, embeddings):
+    with open(file_path, "w") as f:
+        json.dump(embeddings, f)
+
+def load_embeddings_cache(file_path):
+    if os.path.exists(file_path):
+        with open(file_path, "r") as f:
+            return json.load(f)
+    return None
