@@ -8,6 +8,7 @@ from embedding.index_faiss import build_qdrant_index_with_sentence_transformer
 from parsing.extract_text import extract_text
 from retrieval.retriever import retrieve
 from llm.gemini import call_gemini
+from parsing.chunking import semantic_chunking_with_st
 import logging
 
 
@@ -19,15 +20,13 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 @st.cache_resource
 def load_and_index_documents():
-    documents = extract_text(PDF_PATH)
-
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-    chunks = text_splitter.split_documents(documents)
-
+    docs = extract_text(PDF_PATH)
+    full_text = " ".join([doc.page_content for doc in docs])
+    documents = semantic_chunking_with_st(full_text)
     embedding_model = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
 
     vectorstore = build_qdrant_index_with_sentence_transformer(
-        chunks,
+        documents,
         embedding_model,
         collection_name=QDRANT_COLLECTION
     )
