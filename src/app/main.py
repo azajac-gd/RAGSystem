@@ -8,15 +8,19 @@ from embedding.index_faiss import build_qdrant_index_with_sentence_transformer
 from parsing.extract_text import extract_text
 from retrieval.retriever import retrieve
 from llm.gemini import call_gemini
+import logging
 
 
 PDF_PATH = "./data/pdf/ifc-annual-report-2024-financials.pdf"
 QDRANT_COLLECTION = "ifc_report"
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 @st.cache_resource
 def load_and_index_documents():
     documents = extract_text(PDF_PATH)
+
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     chunks = text_splitter.split_documents(documents)
 
