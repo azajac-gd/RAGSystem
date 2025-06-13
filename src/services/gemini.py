@@ -11,11 +11,13 @@ client = genai.Client(
     location=os.getenv("LOCATION")
 )
 
-@observe()
+@observe(as_type="generation")
 def call_gemini(prompt):
+    model = "gemini-2.0-flash"
     response = client.models.generate_content(
-        model="gemini-2.0-flash",
+        model=model,
         contents=prompt
     )
+
     return response.text
 

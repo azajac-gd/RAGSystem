@@ -10,7 +10,8 @@ class GeminiEmbeddings(Embeddings):
     def __init__(self, client=gemini_client, model: str = "text-embedding-004"):
         self.client = client
         self.model = model
-    @observe()
+
+    @observe(as_type="embedding")
     def embed_documents(self, texts: list[str]) -> list[list[float]]:
         batch_size = 16
         embeddings = []
@@ -26,7 +27,8 @@ class GeminiEmbeddings(Embeddings):
             ]
             embeddings.extend([r.embeddings[0].values for r in responses])
         return embeddings
-    @observe()
+    
+    @observe(as_type="embedding")
     def embed_query(self, text: str) -> list[float]:
         response = self.client.models.embed_content(
             model=self.model,

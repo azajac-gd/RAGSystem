@@ -46,6 +46,7 @@ def main():
     if user_query:
         with st.spinner("Processing query..."):
             relevant_chunks = retrieve(user_query, vectorstore)
+            logging.info(f"Retrieved {len(relevant_chunks)} relevant chunks for the query.")
             context = "\n\n".join([chunk.page_content for chunk in relevant_chunks])
             prompt = f"Answer the question using the following context:\n{context}\n\nQuestion: {user_query}"
             answer = call_gemini(prompt)
