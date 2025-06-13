@@ -41,31 +41,8 @@ def extract_text(pdf_path):
 def extract_text_with_docling(pdf_path):
     converter = DocumentConverter()
     pdf = converter.convert(source=pdf_path).document
-    documents = []
 
-    for page_number, page in enumerate(pdf.pages[2:], start=2):
-        cleaned_blocks = []
+    text_blocks = [block.text for block in pdf.text_blocks if block.text.strip()]
+    full_text = "\n\n".join(text_blocks)
 
-        for block in page.blocks:
-            block_type = block.metadata.get("block_type", "").lower()
-            if block_type in {"table", "caption", "header", "footer"}:
-                continue
-
-            text = block.text().strip()
-            if not text:
-                continue
-
-            if text.isdigit() or text.lower().startswith("page "):
-                continue
-
-            cleaned_blocks.append(text)
-
-        full_text = " ".join(cleaned_blocks).strip()
-
-        if full_text:
-            metadata = {
-                "page": page_number + 1,
-            }
-            documents.append(Document(page_content=full_text, metadata=metadata))
-
-    return documents
+    return full_text
