@@ -1,3 +1,7 @@
+from langchain_docling import DoclingLoader
+from langchain.schema import Document
+from docling.document_converter import DocumentConverter
+
 from PyPDF2 import PdfReader
 from langchain.schema import Document
 
@@ -31,4 +35,37 @@ def extract_text(pdf_path):
             }
             documents.append(Document(page_content=cleaned, metadata=metadata))
     
+    return documents
+
+
+def extract_text_with_docling(pdf_path):
+    converter = DocumentConverter()
+    pdf = converter.convert(source=pdf_path).document
+    documents = []
+
+    for page_number, page in enumerate(pdf.pages[2:], start=2):
+        cleaned_blocks = []
+
+        for block in page.blocks:
+            block_type = block.metadata.get("block_type", "").lower()
+            if block_type in {"table", "caption", "header", "footer"}:
+                continue
+
+            text = block.text().strip()
+            if not text:
+                continue
+
+            if text.isdigit() or text.lower().startswith("page "):
+                continue
+
+            cleaned_blocks.append(text)
+
+        full_text = " ".join(cleaned_blocks).strip()
+
+        if full_text:
+            metadata = {
+                "page": page_number + 1,
+            }
+            documents.append(Document(page_content=full_text, metadata=metadata))
+
     return documents

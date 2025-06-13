@@ -23,6 +23,8 @@ def load_and_index_documents():
     docs = extract_text(PDF_PATH)
     full_text = " ".join([doc.page_content for doc in docs])
     documents = semantic_chunking_with_st(full_text)
+    for i in range(10):
+        st.info(documents[i].page_content)  
     embedding_model = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
 
     vectorstore = build_qdrant_index_with_sentence_transformer(

@@ -13,3 +13,4 @@ Thumbs.db
 *.sqlite
 *.lock
 *.pdf
+notes.py
