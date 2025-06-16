@@ -1,7 +1,12 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from langchain.schema import Document
 from docling.document_converter import DocumentConverter
 from pdfminer.high_level import extract_pages
 from pdfminer.layout import LTTextContainer
+import re
 import re
 
 def clean_text(text: str) -> str:
@@ -15,6 +20,8 @@ def clean_text(text: str) -> str:
     text = re.sub(r'[─━═‾_—–-]{3,}', '', text)
     #Remove figure and table references
     text = re.sub(r'(Figure|Table)\s?\d+[:.]?', '', text, flags=re.IGNORECASE)
+    text = re.sub(r'\.{4,}', '', text)
+
     return text.strip()
 
 
@@ -42,7 +49,10 @@ def extract_text_with_docling(pdf_path):
     converter = DocumentConverter()
     pdf = converter.convert(source=pdf_path).document
 
-    text_blocks = [block.text for block in pdf.text_blocks if block.text.strip()]
-    full_text = "\n\n".join(text_blocks)
+    cleaned_docs = []
+    for doc in pdf:
+        cleaned_content = clean_text(doc.page_content)
+        cleaned_docs.append(Document(page_content=cleaned_content, metadata=doc.metadata))
 
-    return full_text
+    return cleaned_docs
+
