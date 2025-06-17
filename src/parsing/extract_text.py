@@ -7,7 +7,6 @@ from docling.document_converter import DocumentConverter
 from pdfminer.high_level import extract_pages
 from pdfminer.layout import LTTextContainer
 import re
-import re
 
 def clean_text(text: str) -> str:
     #Replace line breaks
@@ -38,8 +37,9 @@ def extract_text(pdf_path):
             page_text = " ".join(texts)
             cleaned = clean_text(page_text)
             metadata = {"page": page_number,
-
-                        }
+                        "section": "IFC 2024 Annual Report Financials",
+                        "type": "text"}
+                        
             documents.append(Document(page_content=cleaned, metadata=metadata))
     
     return documents

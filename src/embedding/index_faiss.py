@@ -46,14 +46,21 @@ def build_qdrant_index(chunks, embedding_model, collection_name="my_collection")
 
 def load_and_index_documents():
     docs = extract_text(PDF_PATH)
-    full_text = " ".join([doc.page_content for doc in docs])
-    documents = semantic_chunking_with_st(full_text)
     embedding_model = GeminiEmbeddings()
+
+    all_chunks = []
+    for doc in docs:
+        chunks = semantic_chunking_with_st(doc.page_content)
+        for chunk in chunks:
+            chunk.metadata = doc.metadata
+            all_chunks.append(chunk)
+
     vectorstore = build_qdrant_index(
-        documents,
+        all_chunks,
         embedding_model,
         collection_name=QDRANT_COLLECTION
     )
     return vectorstore
+
 
 #load_and_index_documents()
