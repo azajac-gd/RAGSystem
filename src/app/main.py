@@ -60,21 +60,5 @@ def main():
                 else:
                     st.error(answer)
 
-
-client = get_qdrant_client()
-
-# Pobierz np. 1 punkt z kolekcji z payloadem
-response = client.search(
-    collection_name="ifc_report",  # podaj swoją nazwę kolekcji
-    query_vector=[0.0]*768,         # wektor zapytania (dowolny, np. zerowy, by pobrać coś)
-    limit=1,
-    with_payload=True,              # bardzo ważne — chcemy też metadane
-)
-
-for point in response:
-    print("ID:", point.id)
-    print("Vector:", point.vector)
-    print("Payload:", point.payload)
-
 if __name__ == "__main__":
     main()
