@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 load_dotenv()
 from langfuse import observe
 from google.genai import types
+#from langfuse.decorators import observe, langfuse_context
+
 
 
 client = genai.Client(
@@ -29,6 +31,14 @@ def call_gemini(context:str, user_query:str) -> str:
         contents=f"""Answer the question using the following context:\n{context}\n\nQuestion: {user_query}"""
     )
 
+    # langfuse_context.update_current_observation(
+    #     input=input,
+    #     model=model,
+    #     usage_details={
+    #         "input": response.usage_metadata.prompt_token_count,
+    #         "output": response.usage_metadata.candidates_token_count,
+    #         "total": response.usage_metadata.total_token_count
+    #     })
     return response.text
 
 
@@ -59,6 +69,7 @@ search_with_metadata_declaration = {
     }
 }
 
+@observe(as_type="generation")
 def return_metadata(user_query: str) -> str:
     model = "gemini-2.0-flash"
     tools = types.Tool(function_declarations=[search_with_metadata_declaration])
