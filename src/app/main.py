@@ -40,7 +40,7 @@ def main():
             query, page_start, page_end, section, _type  = metadata
             if metadata:
                 st.markdown("### Metadata:")
-                st.write(metadata)
+                st.json(metadata)
             relevant_chunks = retrieve(vectorstore, query, page_start, page_end, section, _type)
             st.write(f"Found {len(relevant_chunks)} relevant chunks.")
             if len(relevant_chunks) == 0:
