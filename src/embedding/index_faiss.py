@@ -77,6 +77,36 @@ def add_images_to_index(vectorstore):
     vectorstore.add_documents(all_chunks)
     print(f"Added {len(all_chunks)} image summaries to the index.")
 
+from langchain_core.documents import Document
+import json
+
+def add_table_to_index(vectorstore, metadata_path="output_tables/metadata.json"):
+    with open(metadata_path) as f:
+        metadata_list = json.load(f)
+
+    documents = []
+    for entry in metadata_list:
+        summary = entry.get("summary")
+        if not summary:
+            continue 
+
+        doc = Document(
+            page_content=summary,
+            metadata={
+                "page": entry.get("page"),
+                "section": None,
+                "type": "table"
+            }
+        )
+        documents.append(doc)
+
+    print(f"Created {len(documents)} table documents.")
+    vectorstore.add_documents(documents)
+
+    return documents
+
+add_table_to_index(vectorstore=load_qdrant())
+
 
 def load_and_index_documents():
     print("Extracting text from PDF...")
@@ -102,4 +132,4 @@ def load_and_index_documents():
 
 
 ##load_and_index_documents()
-add_images_to_index(load_qdrant())
+#add_images_to_index(load_qdrant())

@@ -3,6 +3,7 @@ from langchain.schema import Document
 import pdfplumber
 import pandas as pd
 import json
+from services.gemini import summarize_table
 
 pdf_path = "./data/pdf/ifc-annual-report-2024-financials.pdf"
 
@@ -39,25 +40,25 @@ def extract_tables_with_pdfplumber(pdf_path, output_dir="output_tables"):
 
     return all_metadata
 
-extract_tables_with_pdfplumber(pdf_path, output_dir="output_tables")    
+#extract_tables_with_pdfplumber(pdf_path, output_dir="output_tables")    
 
-def load_tables_from_csvs(csv_dir):
-    import os
-    documents = []
+def generate_table_summaries(metadata_path="output_tables/metadata.json"):
+    with open(metadata_path) as f:
+        metadata_list = json.load(f)
 
-    for fname in os.listdir(csv_dir):
-        if fname.endswith(".csv"):
-            path = os.path.join(csv_dir, fname)
-            df = pd.read_csv(path)
+    for entry in metadata_list:
+        csv_path = entry["csv_path"]
+        try:
+            summary = summarize_table(csv_path)
+            entry["summary"] = summary
+            print(f"Summarized table on page {entry['page']}, table {entry['table_number']}")
+        except Exception as e:
+            print(f"Error summarizing table at {csv_path}: {e}")
+            entry["summary"] = None
 
-            table_text = df.to_markdown(index=False)
+    with open(metadata_path, "w") as f:
+        json.dump(metadata_list, f, indent=2)
 
-            metadata = {
-                "source": fname,
-                "type": "table"
-            }
+    return metadata_list
 
-            doc = Document(page_content=table_text, metadata=metadata)
-            documents.append(doc)
-
-    return documents
+generate_table_summaries("output_tables/metadata.json")
