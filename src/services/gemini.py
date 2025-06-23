@@ -6,6 +6,8 @@ from langfuse import observe
 from google.genai import types
 #from langfuse.decorators import observe, langfuse_context
 import json
+import io
+from PIL import Image
 
 
 
@@ -32,14 +34,6 @@ def call_gemini(context:str, user_query:str) -> str:
         contents=f"""Answer the question using the following context:\n{context}\n\nQuestion: {user_query}"""
     )
 
-    # langfuse_context.update_current_observation(
-    #     input=input,
-    #     model=model,
-    #     usage_details={
-    #         "input": response.usage_metadata.prompt_token_count,
-    #         "output": response.usage_metadata.candidates_token_count,
-    #         "total": response.usage_metadata.total_token_count
-    #     })
     return response.text
 
 
@@ -66,6 +60,18 @@ def return_metadata(user_query: str):
     metadata = Metadata(**metadata)
     return metadata.query, metadata.page_start, metadata.page_end, metadata.section, metadata._type
 
+
+@observe(as_type="generation")
+def summarize_image(image_bytes):
+    image = Image.open(io.BytesIO(image_bytes))
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=[
+            types.Part(text="What does this chart or image show? Summarize it briefly."),
+            types.Part(inline_data={"mime_type": "image/png", "data": image_bytes})
+        ]
+    )
+    return response.text
 
 
 

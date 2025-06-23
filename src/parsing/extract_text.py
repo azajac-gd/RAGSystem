@@ -7,6 +7,8 @@ from docling.document_converter import DocumentConverter
 from pdfminer.high_level import extract_pages
 from pdfminer.layout import LTTextContainer
 import re
+from embedding.embedder import GeminiEmbeddings
+from parsing.chunking import semantic_chunking_with_st
 
 def clean_text(text: str) -> str:
     #Replace line breaks
@@ -45,14 +47,17 @@ def extract_text(pdf_path):
     return documents
 
 
-def extract_text_with_docling(pdf_path):
-    converter = DocumentConverter()
-    pdf = converter.convert(source=pdf_path).document
+def chunk_text(PDF_PATH):
+    print("Extracting text from PDF...")
+    docs = extract_text(PDF_PATH)
+    print(f"Extracted {len(docs)} text documents.")
 
-    cleaned_docs = []
-    for doc in pdf:
-        cleaned_content = clean_text(doc.page_content)
-        cleaned_docs.append(Document(page_content=cleaned_content, metadata=doc.metadata))
-
-    return cleaned_docs
+    all_chunks = []
+    print("Chunking documents...")
+    for doc in docs:
+        chunks = semantic_chunking_with_st(doc.page_content)
+        for chunk in chunks:
+            chunk.metadata = doc.metadata
+            all_chunks.append(chunk)
+    print(f"Created {len(all_chunks)} chunks from text documents.")
 
