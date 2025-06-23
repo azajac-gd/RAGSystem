@@ -5,6 +5,7 @@ load_dotenv()
 from langfuse import observe
 from google.genai import types
 #from langfuse.decorators import observe, langfuse_context
+import json
 
 
 
@@ -42,70 +43,30 @@ def call_gemini(context:str, user_query:str) -> str:
     return response.text
 
 
+from pydantic import BaseModel
 
-search_with_metadata_declaration = {
-    "name": "search_with_metadata",
-    "description": "Return metadata for the search based on the user query.",
-    "parameters":{
-        "type": "object",
-        "properties": {
-            "query": {"type": "string", 
-                      "description": "A keyword or phrase to search for."},
-            "page_start": {"type": "integer", 
-                           "description": "Starting page number (optional).", 
-                           "nullable": True},
-            "page_end": {"type": "integer", 
-                         "description": "Ending page number (optional).", 
-                         "nullable": True},
-            "section": {"type": "string", 
-                        "description": "Document section.", 
-                        "nullable": True},
-             
-            "type": {"type": "string", 
-                     "description": "Type of content: 'text', 'table', or 'figure'", 
-                     "nullable": True},
-        },
-        "required": ["query"]
-    }
-}
+class Metadata(BaseModel):
+    query: str
+    page_start: int | None = None
+    page_end: int | None = None
+    section: str | None = None
+    _type: str | None = None
+
 
 @observe(as_type="generation")
-def return_metadata(user_query: str) -> str:
-    model = "gemini-2.0-flash"
-    tools = types.Tool(function_declarations=[search_with_metadata_declaration])
-    config = types.GenerateContentConfig(
-        temperature=0.0,
-        system_instruction=f"""You are a helpful assistant that returns metadata for the search based on the user query.""",
-        tools=[tools],
-        tool_config= {"function_calling_config": {"mode": "any"}})
-    
-    contents = [
-        types.Content(
-            role="user", parts=[types.Part(text=f"User query: {user_query}")]
-        )
-    ]
+def return_metadata(user_query: str):
     response = client.models.generate_content(
-        model=model, config=config, contents=contents
-    )
+    model="gemini-2.0-flash",
+    contents=f"You are a helpful assistant that returns metadata based on user queries. User query: {user_query}",
+    config={
+        "response_mime_type": "application/json",
+        "response_schema": Metadata,
+    })
+    metadata = json.loads(response.text)
+    metadata = Metadata(**metadata)
+    return metadata.query, metadata.page_start, metadata.page_end, metadata.section, metadata._type
 
-    tool_call = response.candidates[0].content.parts[0].function_call
-    if tool_call is None:
-        return "Model did not choose any tool."
 
-    name = tool_call.name
-    args = tool_call.args
-
-    if name == "search_with_metadata":
-        query = args.get("query")
-        page_start = args.get("page_start")
-        if page_start is not None:
-            page_start = int(page_start)
-        page_end = args.get("page_end")
-        if page_end is not None:
-            page_end = args.get("page_end")
-        section = args.get("section")
-        type_ = args.get("type")
-        return query, page_start, page_end, section, type_
 
 
 
