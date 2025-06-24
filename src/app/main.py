@@ -46,15 +46,25 @@ def main(rerank_enabled=True):
                 if rerank_enabled:
                     reranked_chunks = rerank(user_query, relevant_chunks, top_k=3)
                     relevant_chunks = reranked_chunks
-                context = "\n\n".join([chunk.page_content for chunk in relevant_chunks])
-                answer = call_gemini(context, user_query)
+                answer = call_gemini(relevant_chunks, user_query)
 
                 if answer != "The document does not provide this information." and answer != "This question is not related to the IFC Annual Report 2024." and answer != "The answer is not in the provided pages.":
                     st.markdown("### Answer:")
                     st.write(answer)
-                    st.markdown("### Retrieved Context:")
-                    for chunk in relevant_chunks:
-                        st.markdown(f"> {chunk.page_content[:500]}...")
+                    st.markdown("### Retrieved Context")
+                    with st.expander("Show retrieved context chunks"):
+                        for i, chunk in enumerate(relevant_chunks):
+                            page = chunk.metadata.get("page", "N/A")
+                            section = chunk.metadata.get("section", "Unknown section")
+                            content_type = chunk.metadata.get("type", "text")
+
+                            st.markdown(f""" 
+                            #### Chunk {i+1}
+                            - **Section:** {section}  
+                            - **Page:** {page}  
+                            - **Type:** `{content_type}`  
+                            """)
+                            st.write(chunk.page_content[:500] + "...", language="markdown")
                 else:
                     st.error(answer)
 

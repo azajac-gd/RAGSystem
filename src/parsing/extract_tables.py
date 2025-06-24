@@ -61,4 +61,4 @@ def generate_table_summaries(metadata_path="output_tables/metadata.json"):
 
     return metadata_list
 
-generate_table_summaries("output_tables/metadata.json")
+#generate_table_summaries("output_tables/metadata.json")
