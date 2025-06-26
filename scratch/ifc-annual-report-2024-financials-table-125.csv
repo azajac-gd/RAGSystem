@@ -1,0 +1,27 @@
+Sector,Valuation technique,Fair value,Significant inputs,Range,Weighted average (%)
+Banking and other financial,Discounted cash flows,$ 317,Cost of equity (%),12.2 - 34.4,15.2
+Institutions,,,Asset growth rate (%),(8.6) - 56.6,4.5
+,,,Return on assets (%),(0.6) - 6.2,1.9
+,,,Perpetual growth rate (%),3.0 - 15.0,5.4
+,Market comparables,509,Price to book value,0.3 - 4.9,2.9
+,,,EV/Sales,2.1 - 11.2,7.4
+,,,Other valuation multiples a,,
+,Listed price (adjusted),237,Discount for lack of marketability (%),20.0 - 30.0,27.6
+,Recent transactions,634,,,
+,Other techniques,132,,,
+,Associated options b,46,,,
+Total banking and other financial institutions,,"1,875",,,
+Funds,Recent transactions,123,,,
+,Market comparables,2,,,
+,Other techniques,85,,,
+Total funds,,210,,,
+Others,Discounted cash flows,942,Weighted average cost of capital (%),7.9 - 26.1,11.8
+,,,Cost of equity (%),10.8 - 23.9,15.3
+,Market comparables,645,EV/Sales,0.7 - 19.1,5.4
+,,,EV/EBITDA,6.2 - 22.0,12.6
+,,,Price to book value,0.6 -,1.5
+,Recent transactions,480,,,
+,Other techniques,96,,,
+,Associated options b,103,,,
+Total others,,"2,266",,,
+Total,,"$ 4,351",,,

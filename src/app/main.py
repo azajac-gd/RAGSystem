@@ -36,15 +36,15 @@ def main(rerank_enabled=True):
         with st.spinner("Processing query..."):
             metadata = return_metadata(user_query)
             logging.info(f"Metadata returned: {metadata}")
-            query, page_start, page_end, section, _type  = metadata
-            relevant_chunks = retrieve(vectorstore, query, page_start, page_end, section, _type)
-            search_with_scores(vectorstore.client, vectorstore.embeddings, query, vectorstore.collection_name, page_start, page_end, section, _type)
+            query, page_start, page_end, _type  = metadata
+            relevant_chunks = retrieve(vectorstore, query, page_start, page_end, _type)
+            search_with_scores(vectorstore.client, vectorstore.embeddings, query, vectorstore.collection_name, page_start, page_end, _type)
             if len(relevant_chunks) == 0:
                 st.error("No relevant chunks found. Please try a different query.")
                 return
             else:
                 if rerank_enabled:
-                    reranked_chunks = rerank(user_query, relevant_chunks, top_k=3)
+                    reranked_chunks = rerank(user_query, relevant_chunks, top_k=10)
                     relevant_chunks = reranked_chunks
                 answer = call_gemini(relevant_chunks, user_query)
 
@@ -55,16 +55,25 @@ def main(rerank_enabled=True):
                     with st.expander("Show retrieved context chunks"):
                         for i, chunk in enumerate(relevant_chunks):
                             page = chunk.metadata.get("page", "N/A")
-                            section = chunk.metadata.get("section", "Unknown section")
+                            section = chunk.metadata.get("content", "Unknown")
+                            section_1 = chunk.metadata.get("section", None)
                             content_type = chunk.metadata.get("type", "text")
-
-                            st.markdown(f""" 
-                            #### Chunk {i+1}
-                            - **Section:** {section}  
-                            - **Page:** {page}  
-                            - **Type:** `{content_type}`  
-                            """)
-                            st.write(chunk.page_content[:500] + "...", language="markdown")
+                            if section_1 != "Unknown":
+                                st.markdown(f""" 
+                                #### Chunk {i+1}
+                                - **Section:** {section}: {section_1}  
+                                - **Page:** {page}  
+                                - **Type:** `{content_type}`  
+                                """)
+                                st.write(chunk.page_content[:500] + "...")
+                            else:
+                                st.markdown(f""" 
+                                #### Chunk {i+1}
+                                - **Section:** {section} 
+                                - **Page:** {page}  
+                                - **Type:** `{content_type}`  
+                                """)
+                                st.write(chunk.page_content[:500] + "...")
                 else:
                     st.error(answer)
 

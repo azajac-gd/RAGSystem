@@ -1,7 +1,7 @@
 from qdrant_client.models import Filter, FieldCondition, MatchValue, Range
 import logging
 
-def retrieve(vectorstore, query, page_start=None, page_end=None, section=None, type_=None):
+def retrieve(vectorstore, query, page_start=None, page_end=None, type_=None):
     conditions = []
 
     if page_start is not None or page_end is not None:
@@ -14,14 +14,6 @@ def retrieve(vectorstore, query, page_start=None, page_end=None, section=None, t
             FieldCondition(
                 key="metadata.page",
                 range=Range(**range_args)
-            )
-        )
-
-    if section is not None:
-        conditions.append(
-            FieldCondition(
-                key="metadata.section",
-                match=MatchValue(value=section)
             )
         )
 
@@ -38,16 +30,15 @@ def retrieve(vectorstore, query, page_start=None, page_end=None, section=None, t
     retriever = vectorstore.as_retriever(
         search_type="similarity",
         search_kwargs={
-            "k": 10,
+            "k": 50,
             "filter": filter_
         }
     )
-
     return retriever.get_relevant_documents(query)
 
 
 
-def search_with_scores(client, embedding_model, query, collection_name, page_start=None, page_end=None, section=None, type_=None):
+def search_with_scores(client, embedding_model, query, collection_name, page_start=None, page_end=None, type_=None):
     vector = embedding_model.embed_query(query)
 
     conditions = []
@@ -65,13 +56,6 @@ def search_with_scores(client, embedding_model, query, collection_name, page_sta
             )
         )
 
-    if section is not None:
-        conditions.append(
-            FieldCondition(
-                key="metadata.section",
-                match=MatchValue(value=section)
-            )
-        )
 
     if type_ is not None:
         conditions.append(
@@ -87,7 +71,7 @@ def search_with_scores(client, embedding_model, query, collection_name, page_sta
         collection_name=collection_name,
         query_vector=vector,
         query_filter=filter_,
-        limit=10,
+        limit=5,
         with_payload=True,
         with_vectors=False
     )

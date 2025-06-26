@@ -1,0 +1,8 @@
+Instrument,Significant Unobservable Input,Changes in Unobservable Input Results In
+IFC Local Currency Borrowings,IFC Yield Curve,Decrease in Fair Value
+Interest Rate Swaps (hedging loans and liquid assets),Yield Curve Points,Increase in Fair Value
+Interest Rate Swaps (hedging borrowings),Yield Curve Points,Decrease in Fair Value
+Currency Swaps (hedging loans and liquid assets),Yield Curve and Exchange Rates,Increase in Fair Value
+Currency Swaps (hedging borrowings),Yield Curve and Exchange Rates,Decrease in Fair Value
+Debt Securities and Loans,"Discount Rates, Credit Default Spreads Valuation Multiple, Recovery Rates",Decrease in Fair Value Increase in Fair Value
+Equity Securities and Equity Related Derivatives,"Cost of equity, discounts for lack of marketability, weighted average cost of capital Growth rates, return on assets, perpetual growth rates, EV/EBITDA, price to book value and other valuation multiples and volatilities",Decrease in Fair Value Increase in Fair Value

@@ -1,0 +1,6 @@
+Level 3 derivatives,Type,Fair value,Significant inputs,Range (%),Weighted average (%)
+Equity related derivatives,Fixed strike price options,$ -,Volatilities,24.3 - 28.1,27.8
+,Variable strike price options,86,Contractual strike price a,,
+Interest rate and currency swap assets,Vanilla swaps,120,"Yield curve points, exchange rates",,
+Interest rate and currency swap liabilities,Vanilla swaps,(7),"Yield curve points, exchange rates",,
+Total,,$ 199,,,

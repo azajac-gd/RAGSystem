@@ -1,0 +1,31 @@
+(US$ in millions),"June 30, 2024.Current","June 30, 2024.1-30 Days past due","June 30, 2024.31-60 days past due","June 30, 2024.61-90 days past due","June 30, 2024.Greater than 90 days past due","June 30, 2024.Total loans"
+Africa,,,,,,
+"Manufacturing, agribusiness and services","$ 1,870",$ 278,$ -,$ -,$ 49,"$ 2,197"
+Financial markets,"3,214",365,-,-,-,"3,579"
+Infrastructure and natural resources,"1,821",82,-,-,91,"1,994"
+Disruptive technologies and funds,-,-,-,-,4,4
+Total Africa,"6,905",725,-,-,144,"7,774"
+Asia and Pacific,,,,,,
+"Manufacturing, agribusiness and services","2,801",121,-,-,20,"2,942"
+Financial markets,"5,395",1,-,-,4,"5,400"
+Infrastructure and natural resources,"1,525",18,48,-,-,"1,591"
+Total Asia and Pacific,"9,721",140,48,-,24,"9,933"
+"Latin America and the Caribbean, and Europe",,,,,,
+"Manufacturing, agribusiness and services","4,823",12,-,25,79,"4,939"
+Financial markets,"4,567",64,-,-,8,"4,639"
+Infrastructure and natural resources,"2,252",14,15,-,21,"2,302"
+Disruptive technologies and funds,17,-,-,-,-,17
+"Total Latin America and the Caribbean, and Europe","11,659",90,15,25,108,"11,897"
+"Middle East, Central Asia, Türkiye, Pakistan, and Afghanistan",,,,,,
+"Manufacturing, agribusiness and services","1,768",87,-,-,11,"1,866"
+Financial markets,"1,010",236,-,-,20,"1,266"
+Infrastructure and natural resources,"1,074",161,-,-,30,"1,265"
+"Total Middle East, Central Asia, Türkiye, Pakistan, and Afghanistan","3,852",484,-,-,61,"4,397"
+Other,,,,,,
+"Manufacturing, agribusiness and services",488,2,-,-,-,490
+Financial markets,"1,201",-,-,-,-,"1,201"
+Infrastructure and natural resources,183,-,-,-,-,183
+Total Other,"1,872",2,-,-,-,"1,874"
+Total disbursed loans,"$ 34,009","$ 1,441",$ 63,$ 25,$ 337,"$ 35,875"
+"Unamortized deferred loan origination fees, net and other","Unamortized deferred loan origination fees, net and other",,,,,(146)
+Loans at amortized cost,,,,,,"$ 35,729"

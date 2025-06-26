@@ -1,0 +1,39 @@
+(US$ in millions).Sector/Region,Loans,Equity investments,Debt securities,Total,2024.Loans,2024.Equity investments,2024.Debt securities,2024.Total
+Africa,,,,,,,,
+"Manufacturing, agribusiness and services","$ 2,313",$ 733,$ 178,"$ 3,224","$ 2,153",$ 687,$ 102,"$ 2,942"
+Financial markets,"3,858",311,550,"4,719","2,771",336,466,"3,573"
+Infrastructure and natural resources,"2,252",621,306,"3,179","2,067",501,217,"2,785"
+Disruptive technologies and funds,5,936,17,958,5,833,12,850
+Total Africa,"8,428","2,601","1,051","12,080","6,996","2,357",797,"10,150"
+Asia and Pacific,,,,,,,,
+"Manufacturing, agribusiness and services","2,997","1,101","1,455","5,553","3,176","1,141",886,"5,203"
+Financial markets,"5,547",762,"2,476","8,785","4,673",687,"2,170","7,530"
+Infrastructure and natural resources,"1,648",208,"1,047","2,903","1,773",202,813,"2,788"
+Disruptive technologies and funds,6,"1,627",27,"1,660",5,"1,558",30,"1,593"
+Total Asia and Pacific,"10,198","3,698","5,005","18,901","9,627","3,588","3,899","17,114"
+"Latin America and the Caribbean, and Europe",,,,,,,,
+"Manufacturing, agribusiness and services","4,938",285,226,"5,449","3,856",311,244,"4,411"
+Financial markets,"5,203",467,"3,181","8,851","4,568",495,"2,907","7,970"
+Infrastructure and natural resources,"2,411",588,472,"3,471","1,906",499,364,"2,769"
+Disruptive technologies and funds,26,929,31,986,5,834,46,885
+"Total Latin America and the Caribbean, and Europe","12,578","2,269","3,910","18,757","10,335","2,139","3,561","16,035"
+"Middle East, Central Asia, Türkiye, Pakistan, and Afghanistan",,,,,,,,
+"Manufacturing, agribusiness and services","1,875",283,99,"2,257","1,306",330,96,"1,732"
+Financial markets,"1,392",537,776,"2,705","1,191",546,695,"2,432"
+Infrastructure and natural resources,"1,374",134,-,"1,508","1,430",202,60,"1,692"
+Disruptive technologies and funds,-,219,-,219,-,194,-,194
+"Total Middle East, Central Asia, Türkiye, Pakistan, and Afghanistan","4,641","1,173",875,"6,689","3,927","1,272",851,"6,050"
+Other,,,,,,,,
+"Manufacturing, agribusiness and services",497,26,18,541,467,25,-,492
+Financial markets,"1,201",514,354,"2,069","1,534",386,440,"2,360"
+Infrastructure and natural resources,183,31,-,214,-,21,-,21
+Disruptive technologies and funds,-,598,8,606,-,583,8,591
+Total Other,"1,881","1,169",380,"3,430","2,001","1,015",448,"3,464"
+Total disbursed investment portfolio,"$ 37,726","$ 10,910","$ 11,221","$59,857","$32,886","$ 10,371","$ 9,556","$ 52,813"
+Reserve against losses on loans and debt securities,"(1,081)",-,(34),"(1,115)","(1,209)",-,(21),"(1,230)"
+"Unamortized deferred loan origination fees, net and other",(146),-,-,(146),(127),-,-,(127)
+Disbursed amount allocated to a related financial instrument reported separately in other assets or derivative assets,-,(19),-,(19),-,(36),-,(36)
+Unrealized (losses) on equity investments held by consolidated VIEs,-,(4),-,(4),-,(4),-,(4)
+Unrealized gains (losses) on investments accounted for at fair value as available-for- sale,-,-,4,4,-,-,(17),(17)
+Unrealized (losses) gains on investments accounted for under the Fair Value Option,(62),234,(2),170,(136),447,(208),103
+Carrying value of investments,"$ 36,437","$ 11,121","$ 11,189","$58,747","$31,414","$ 10,778","$ 9,310","$ 51,502"
