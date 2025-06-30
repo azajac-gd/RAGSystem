@@ -7,6 +7,7 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams
 from dotenv import load_dotenv
 from parsing.chunking import semantic_chunking_with_st
+from services.gemini import summarize_single_row_table
 from embedding.embedder import GeminiEmbeddings
 from services.gemini import summarize_image
 from langchain.schema import Document
@@ -14,6 +15,7 @@ from parsing.docling_images import main
 import json
 import pandas as pd
 from pathlib import Path
+import logging
 
 
 load_dotenv()
@@ -116,6 +118,7 @@ def load_and_index_documents():
     return vectorstore
 
 def chunk_tables_from_csv_and_metadata(vectorstore, csv_dir, metadata_path):
+    print("Loading tables")
     with open(metadata_path, "r") as f:
         table_metadata = json.load(f)
 
@@ -126,7 +129,7 @@ def chunk_tables_from_csv_and_metadata(vectorstore, csv_dir, metadata_path):
         if not csv_file.exists():
             print(f"Warning: {csv_file} not found.")
             continue
-
+        print("Reading df")
         try:
             df = pd.read_csv(csv_file)
         except Exception as e:
@@ -140,10 +143,22 @@ def chunk_tables_from_csv_and_metadata(vectorstore, csv_dir, metadata_path):
 
         headers = list(df.columns)
         for idx, row in df.iterrows():
-            content = f"Title: {title}\n" \
-                      f"Table row:\n" \
-                      f"{' | '.join(headers)}\n" \
-                      f"{' | '.join(str(row[col]) for col in headers)}"
+            row_values = [str(row[col]) for col in headers]
+            summary = summarize_single_row_table(title, headers, row_values)
+
+            # Markdown table
+            header_line = " | ".join(headers)
+            separator_line = " | ".join(["---"] * len(headers))
+            row_line = " | ".join(row_values)
+            markdown_table = f"{header_line}\n{separator_line}\n{row_line}"
+
+            content = f"""Title: {title}  
+                    Summary: {summary}
+
+                    Table:
+                    {markdown_table}
+                     """
+
             doc = Document(
                 page_content=content,
                 metadata={
@@ -152,10 +167,12 @@ def chunk_tables_from_csv_and_metadata(vectorstore, csv_dir, metadata_path):
                     "type": "table",
                     "row_index": idx,
                     "title": title,
-                    "content": content_title
+                    "content": content_title,
                 }
             )
+            print("adding document")
             all_documents.append(doc)
+
 
     vectorstore.add_documents(all_documents)
     print(f"Added {len(all_documents)} tables to the index.")

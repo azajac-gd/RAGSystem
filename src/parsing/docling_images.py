@@ -92,47 +92,47 @@ def main():
         if page_number >= 141:
             content = "INVESTMENT PORTFOLIO"
 
-        if isinstance(element, PictureItem):
-            picture_counter += 1
-            fn = output_dir / f"{doc_filename}-picture-{picture_counter}.png"
-            with fn.open("wb") as fp:
-                element.get_image(conv_res.document).save(fp, "PNG")
-            image_metadata.append({
-                "type": "image",
-                "image_path": str(fn),
-                "title": current_figure_title or "Unknown",
-                "page_number": page_number or -1,
-                "section_title": current_section_title or "Unknown",
-                "content": content or "Unknown"
-            })
-            current_figure_title = None
+    #     if isinstance(element, PictureItem):
+    #         picture_counter += 1
+    #         fn = output_dir / f"{doc_filename}-picture-{picture_counter}.png"
+    #         with fn.open("wb") as fp:
+    #             element.get_image(conv_res.document).save(fp, "PNG")
+    #         image_metadata.append({
+    #             "type": "image",
+    #             "image_path": str(fn),
+    #             "title": current_figure_title or "Unknown",
+    #             "page_number": page_number or -1,
+    #             "section_title": current_section_title or "Unknown",
+    #             "content": content or "Unknown"
+    #         })
+    #         current_figure_title = None
 
-        elif isinstance(element, TableItem):
-            table_counter += 1
-            csv_path = output_dir / f"{doc_filename}-table-{table_counter}.csv"
+    #     elif isinstance(element, TableItem):
+    #         table_counter += 1
+    #         csv_path = output_dir / f"{doc_filename}-table-{table_counter}.csv"
 
-            try:
-                df = element.export_to_dataframe()
-                df.to_csv(csv_path, index=False)
-            except Exception as e:
-                _log.warning(f"Failed to export table {table_counter} on page {page_number}: {e}")
+    #         try:
+    #             df = element.export_to_dataframe()
+    #             df.to_csv(csv_path, index=False)
+    #         except Exception as e:
+    #             _log.warning(f"Failed to export table {table_counter} on page {page_number}: {e}")
 
-            table_metadata.append({
-                "type": "table",
-                "csv": str(csv_path),
-                "title": current_table_title or "Unknown",
-                "page_number": page_number or -1,
-                "section_title": current_section_title or "Unknown",
-                "content": content or "Unknown"
-            })
+    #         table_metadata.append({
+    #             "type": "table",
+    #             "csv": str(csv_path),
+    #             "title": current_table_title or "Unknown",
+    #             "page_number": page_number or -1,
+    #             "section_title": current_section_title or "Unknown",
+    #             "content": content or "Unknown"
+    #         })
 
 
 
-    with open(output_dir / f"{doc_filename}-figures.json", "w") as f:
-        json.dump(image_metadata, f, indent=2)
+    # with open(output_dir / f"{doc_filename}-figures.json", "w") as f:
+    #     json.dump(image_metadata, f, indent=2)
 
-    with open(output_dir / f"{doc_filename}-tables.json", "w") as f:
-        json.dump(table_metadata, f, indent=2)
+    # with open(output_dir / f"{doc_filename}-tables.json", "w") as f:
+    #     json.dump(table_metadata, f, indent=2)
 
     _log.info(f"Document converted. Exported {picture_counter} images and {table_counter} tables in {time.time() - start_time:.2f} seconds.")
 

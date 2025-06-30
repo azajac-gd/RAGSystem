@@ -5,7 +5,6 @@ from services.gemini import client as gemini_client
 from langfuse import observe
 
 
-
 class GeminiEmbeddings(Embeddings):
     def __init__(self, client=gemini_client, model: str = "text-embedding-004"):
         self.client = client

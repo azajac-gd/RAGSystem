@@ -21,7 +21,7 @@ client = genai.Client(
 
 @observe(as_type="generation")
 def call_gemini(docs: list[Document], user_query: str) -> str:
-    context = "\n\n".join(doc.page_content for doc in docs)
+    context = "\n\n".join(str(doc) for doc in docs)
     response = client.models.generate_content(
         model="gemini-2.0-flash",
         config=types.GenerateContentConfig(
@@ -116,3 +116,24 @@ def summarize_image(image_bytes, title):
         ]
     )
     return response.text
+
+
+@observe(as_type="generation")
+def summarize_single_row_table(title: str, headers: list[str], row: list[str]) -> str:
+    prompt = f"""
+You are an expert analyst summarizing tables with one row.
+
+Title: {title}
+Headers: {' | '.join(headers)}
+Row: {' | '.join(row)}
+
+Write a concise 1–2 sentence summary of what this table represents and what the user can learn from it.
+"""
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=[types.Part(text=prompt)]
+    )
+    return response.text.strip()
+
+
+
