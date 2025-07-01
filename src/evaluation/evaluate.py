@@ -15,7 +15,7 @@ from ragas.embeddings import LangchainEmbeddingsWrapper
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-from embedding.embedder import GeminiEmbeddings
+from embedding.embedder import GeminiEmbeddings, VertexAIChat
 from retrieval.retriever import retrieve
 from services.gemini import call_gemini
 
@@ -29,9 +29,7 @@ vectorstore = Qdrant(
     embeddings=embedding_model
 )
 
-evaluator_llm = LangchainLLMWrapper(
-    ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0)
-)
+evaluator_llm = LangchainLLMWrapper(VertexAIChat(model="gemini-2.0-flash", temperature=10))
 
 evaluator_embeddings = LangchainEmbeddingsWrapper(embedding_model)
 
